@@ -6,6 +6,7 @@ function Pokemones() {
   const [pokemones, setPokemones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [mensaje, setMensaje] = useState("")
 
   useEffect(() => {
     async function traerDatos() {
@@ -13,8 +14,18 @@ function Pokemones() {
         setLoading(true);
         setError(null);
         const response = await fetch(
-          "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=200",
+          "https://pokeapi.co/api/v2/pokemon",
         );
+
+        if (!response.ok) {
+          if (response.status === 400) {
+            setMensaje("Hubo un error en la solicitud")
+          } else if(response.status === 404) {
+            setMensaje("No se encontraron los datos de este pokemon")
+          }
+          throw new Error(`Error 1: ${response.status}`)
+        }
+
         const data = await response.json();
         setPokemones(data.results);
       } catch (error) {
@@ -33,7 +44,11 @@ function Pokemones() {
     )
   } */
   if (error) {
-    return <p>Tuvimos unn error al traer los datos 😢</p>;
+    return (
+<div>
+  <p>Tuvimos un error al traer los datos 😢</p>
+      <p>{mensaje}</p>
+</div>    )
   }
 
   return (

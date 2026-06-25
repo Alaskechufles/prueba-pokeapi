@@ -7,11 +7,14 @@ function Pokemones() {
   /* 1 - crear variable de estado "pokemones" para guardar la info que venga desde la api */
   const [pokemones, setPokemones] = useState([]);
   /* 12 - creo una variable de estado con un boleano para alternar el estado de carga */
-  const [loading, setLoading] = useState(true);/* 12.1 - dejo el esta en true ya que quiero que sea al primer estado al cargar el componente */
+  const [loading, setLoading] =
+    useState(
+      true,
+    ); /* 12.1 - dejo el esta en true ya que quiero que sea al primer estado al cargar el componente */
   /* 18 - creo una variable de estado con un boleano para alternar el estado de error */
   const [error, setError] = useState(null);
   /* 23 - creamos una variable de estado de string para poder establecer un mensaje amigable con el usuario del estado de la petición */
-  const [mensaje, setMensaje] = useState("")
+  const [mensaje, setMensaje] = useState("");
 
   /*2 - crear el useEffect con la funcion asincrona para traer los datos, y  dejo las dependencias en vacio "[]" para que se ejecute el useEffect al cargar el componente Pokemones*/
   useEffect(() => {
@@ -24,29 +27,28 @@ function Pokemones() {
         /* 19 - mantengo el estado inicial de error en false para que no se muestre de primeras al cargar mi componente*/
         setError(null);
         /* 5 - hacer el fetch a la api y guardarla en response */
-        const response = await fetch(
-          "https://pokeapi.co/api/v2/pokemon",
-        );
+        const response = await fetch("https://pokeapi.co/api/v2/pokemon");
 
         /* 24 - creamos un if para comprobar si la respuesta fue diferente a ok, para que podamos mostrar mensajes acorde al codigo de error */
         if (!response.ok) {
           /* 25 - comparamos response.status para saber el código de error, si es 400-> es bad request */
           if (response.status === 400) {
             /* 26 - asigno un mensaje de error acorde al status 400 */
-            setMensaje("Hubo un error en la solicitud")
+            setMensaje("Hubo un error en la solicitud");
             /* 25.1 - si es 404 -> es not found lo que significa que los datos no fueron encontrados */
-          } else if(response.status === 404) {
+          } else if (response.status === 404) {
             /* 27 - asigno un mensaje de error acorde al status 404 */
-            setMensaje("No se encontraron los datos de este pokemon")
+            setMensaje("No se encontraron los datos de este pokemon");
           }
           /*28 - creo una instancia de error con Error - con el mensaje del status */
-          throw new Error(`Error 1: ${response.status}`)
+          throw new Error(`Error 1: ${response.status}`);
         }
         /* 6 - proceso la data guardada en response con .json() */
         const data = await response.json();
         /* 7 - guardo la data procesada en la variable de estado "pokemones" */
-        setPokemones(data.results); /* 7.1 - estamos guardando "data.results" ya que este almacena el array de los pokemones */
-
+        setPokemones(
+          data.results,
+        ); /* 7.1 - estamos guardando "data.results" ya que este almacena el array de los pokemones */
       } catch (error) {
         /* 8 -  dentro del catch agrego un console.error con el error */
         console.error(error);
@@ -59,7 +61,7 @@ function Pokemones() {
     }
     /* 9 - ejecuto la funcion traerDatos() */
     traerDatos();
-  }, []);
+  }, []); /* 2.1 - dejo las dependencias vacias "[]" para que ejecute el useEffect al cargar el componente */
 
   /* if (loading) {
     return(
@@ -67,15 +69,16 @@ function Pokemones() {
     )
   } */
 
-    /* 21 - si "error" tiene algún valor, esto marcará tru en este if, lo que hará que en vez de que mi componente se renderice, se mostrará  "Tuvimos un error al traer los datos 😢" */
+  /* 21 - si "error" tiene algún valor, esto marcará tru en este if, lo que hará que en vez de que mi componente se renderice, se mostrará  "Tuvimos un error al traer los datos 😢" */
   if (error) {
     return (
-<div>
-  {/* 22 - se muestra este mensaje cuando "error" tiene un valor */}
-  <p>Tuvimos un error al traer los datos 😢</p>
-  {/* 29 - muestro el valor actual de "mensaje" para mostrar el mensaje amigable con el usuario de que pasó */}
-      <p>{mensaje}</p>
-</div>    )
+      <div>
+        {/* 22 - se muestra este mensaje cuando "error" tiene un valor */}
+        <p>Tuvimos un error al traer los datos 😢</p>
+        {/* 29 - muestro el valor actual de "mensaje" para mostrar el mensaje amigable con el usuario de que pasó */}
+        <p>{mensaje}</p>
+      </div>
+    );
   }
 
   return (
@@ -84,7 +87,6 @@ function Pokemones() {
       {console.log(pokemones)}
       <p>Lista</p>
       <div className=" flex flex-col">
-
         {/* 15 - creo un operador ternario para que cuando el estado de loading sea true muestre un svg o un componente o mensaje de que estan cargando los datos */}
         {loading ? (
           /* 16 - este es el svg que indica la carga de datos */
